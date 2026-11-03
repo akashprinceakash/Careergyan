@@ -131,7 +131,8 @@ p { margin: 0 0 1em; }
   .burger { display: grid; }
   .header__actions .btn { display: none; }
   .nav { position: fixed; top: 0; right: 0; bottom: 0; width: min(380px, 88vw); margin: 0; flex-direction: column; align-items: stretch; gap: 0; background: #fff; padding: 88px 20px 28px; box-shadow: var(--sh-lg); overflow-y: auto; transform: translateX(100%); transition: transform .4s var(--ease); z-index: 95; }
-  .nav.is-open { transform: none; }
+  .nav { visibility: hidden; transition: transform .4s var(--ease), visibility 0s .4s; }
+  .nav.is-open { transform: none; visibility: visible; transition: transform .4s var(--ease), visibility 0s; }
   .nav > a, .nav__btn { width: 100%; justify-content: space-between; padding: 14px 6px; font-size: 17px; border-bottom: 1px solid var(--line); border-radius: 0; }
   .drop, .mega { position: static; translate: none; width: auto; opacity: 1; visibility: visible; transform: none; box-shadow: none; border: 0; padding: 4px 0 10px; display: none; }
   .nav__item.is-open > .drop, .nav__item.is-open > .mega { display: grid; }
@@ -396,7 +397,7 @@ p { margin: 0 0 1em; }
 /* ---------- Inner page components ---------- */
 .layout { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: clamp(32px, 4vw, 56px); align-items: start; }
 .sticky { position: sticky; top: calc(var(--header) + 24px); display: grid; gap: 20px; }
-@media (max-width: 1000px) { .layout { grid-template-columns: 1fr; } .sticky { position: static; } }
+@media (max-width: 1000px) { .layout { grid-template-columns: minmax(0, 1fr); } .sticky { position: static; } }
 .prose { font-size: 17.5px; color: var(--text); }
 .prose h2 { font-size: clamp(24px, 2.4vw, 30px); margin: 1.6em 0 .6em; }
 .prose h3 { font-size: 21px; margin: 1.4em 0 .5em; }
@@ -772,7 +773,7 @@ html.lenis, html.lenis body { height: auto; }
 .phero__media, .phero__glow, .phero__inner { will-change: transform; }
 .phero__glow { position: absolute; inset: 0; z-index: -1; pointer-events: none; background: radial-gradient(38% 55% at 82% 30%, rgba(95, 144, 218, .32), transparent 70%), radial-gradient(30% 45% at 12% 85%, rgba(244, 166, 42, .18), transparent 70%); mix-blend-mode: screen; }
 .phero__inner { position: relative; z-index: 1; }
-.phero__fade { position: absolute; left: 0; right: 0; bottom: -1px; height: 110px; z-index: 2; pointer-events: none; background: linear-gradient(180deg, rgba(255, 255, 255, 0), #fff); }
+.phero__fade { position: absolute; left: 0; right: 0; bottom: -1px; height: 110px; z-index: 2; pointer-events: none; background: linear-gradient(180deg, rgb(255 255 255 / 0%), #000000) }
 .phero + .section--tint, .phero + .section.section--tint { margin-top: 0; }
 .hero__board { will-change: transform; }
 .hero__copy { will-change: transform; }
@@ -1048,3 +1049,37 @@ html.lenis, html.lenis body { height: auto; }
 .cform__trust ul { list-style: none; margin: 0; padding: 14px 0 0; border-top: 1px solid rgba(36, 54, 114, .12); display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
 .cform__trust li b { display: block; font: 800 22px var(--head); color: var(--navy); letter-spacing: -.02em; }
 .cform__trust li span { font-size: 13px; color: var(--muted); }
+
+/* ---------- Responsive hardening (mobile + tablet) ---------- */
+/* The off-canvas menu parked at translateX(100%) widened the page; clip it at the viewport */
+html { overflow-x: clip; }
+/* Grid items default to min-width:auto, so wide content (tables, reCAPTCHA) stretched 1fr columns past the screen */
+.layout > *, .split > *, .hero__grid > *, .facts > *, .grid-2 > *, .grid-3 > *, .grid-4 > *, .lead__grid > *, .cform > *, .faqsplit > * { min-width: 0; }
+.tbl-wrap { max-width: 100%; -webkit-overflow-scrolling: touch; }
+@media (max-width: 1060px) { .nav > a, .nav__btn { min-height: 48px; } }
+@media (max-width: 520px) {
+  /* reCAPTCHA renders a fixed 304px iframe; scale it and reserve only the scaled footprint */
+  .g-recaptcha, .sticky .g-recaptcha { transform: scale(.86); transform-origin: left top; width: 262px; min-height: 68px; height: 68px; }
+  .searchbar .btn { width: 100%; }
+  .header__logo img { height: 38px; }
+}
+/* Desktop: centre the destinations mega menu on the header row so it never spills off-screen */
+@media (min-width: 1061px) {
+  .header__in { position: relative; }
+  .nav__item--mega { position: static; }
+  .nav__item--mega > .mega { top: calc(100% - 8px); }
+  .nav__item--mega > .mega::before { top: -24px; height: 24px; }
+}
+.nav > a, .nav__btn { white-space: nowrap; }
+@media (min-width: 1061px) and (max-width: 1180px) { .nav > a, .nav__btn { padding: 10px 7px; font-size: 14.5px; } .header__logo img { height: 40px; } .header__actions .btn { padding-inline: 16px; } }
+@media (max-width: 1060px) {
+  /* backdrop-filter makes the header the containing block for the fixed menu, trapping it inside the 76px bar */
+  .header { backdrop-filter: none; -webkit-backdrop-filter: none; background: #fff; }
+  /* keep the dim overlay below the header so the menu panel sits above it */
+  .scrim { z-index: 89; }
+}
+@media (max-width: 1060px) {
+  /* nav is out of flow here, so push the burger to the right edge itself */
+  .header__actions { margin-left: auto; }
+  .nav > a.nav__cta { justify-content: center; color: #fff; border-radius: 10px; border-bottom: 0; padding: 14px 22px; }
+}

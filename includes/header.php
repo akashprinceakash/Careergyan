@@ -93,10 +93,10 @@ function nav_on($key, $active) { return $key === $active ? ' class="is-active" a
           <a href="ebook.php"><?= icon('book', 'ico ico--sm') ?><span><b>E-Books</b>Free monthly study abroad guide</span></a>
           <a href="check_eligibility.php"><?= icon('shield', 'ico ico--sm') ?><span><b>Germany eligibility</b>Opportunity Card points check</span></a>
           <a href="gallery.php"><?= icon('users', 'ico ico--sm') ?><span><b>Gallery</b>Fairs, meetups and student moments</span></a>
-          <a href="https://qckloans.com/loans/" target="_blank" rel="noopener"><?= icon('bank', 'ico ico--sm') ?><span><b>Student loan</b>Apply with our lending partner</span></a>
         </div>
       </div>
 
+      <a href="https://qckloans.com/loans/" target="_blank" rel="noopener">Student Loan</a>
       <a href="contact.php"<?= nav_on('contact', $active) ?>>Contact</a>
       <a class="btn btn--primary nav__cta" href="contact.php">Free counselling</a>
     </nav>

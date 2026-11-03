@@ -31,7 +31,7 @@ foreach ($board as $k => [$intake, $st]) {
   <div class="container hero__grid">
     <div class="hero__copy" data-parallax-layer="3">
       <span class="eyebrow" data-hero-item>ICEF accredited · EAIE &amp; NAFSA member</span>
-      <h1 class="hero__title" data-hero-item>Your study abroad journey, <em>guided</em> end to end.</h1>
+      <h1 class="hero__title" data-hero-item>Your study abroad journey, <em>Guided</em> end to end.</h1>
       <p class="hero__lead" data-hero-item>Expert guidance from admission to visa, and everything in between. Join 6,320+ students who chose the right course, country and university with Career Gyan.</p>
       <div class="hero__actions" data-hero-item>
         <a class="btn btn--accent btn--lg" href="contact.php">Book a free consultation <?= icon('arrow', 'ico ico--sm') ?></a>
